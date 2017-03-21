@@ -1,0 +1,9 @@
+Measure,fixedMeasure,Measure Type
+L.F,Labor Force,Number
+LF,Labor Force,Number
+EMP,Employment,Number
+EM,Employment,Number
+UNEMP,Unemployment,Number
+UN,Unemployment,Number
+%,Unemployment Rate,Percent
+RT,Unemployment Rate,Percent
