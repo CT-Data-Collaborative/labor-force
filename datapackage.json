@@ -21,7 +21,6 @@
   }],
   "contributor": [],
   "resources": [{
-<<<<<<< HEAD
     "path": "data/labor_force_2008-2015.csv",
     "format": "csv",
     "schema": {
@@ -94,81 +93,6 @@
         "type": "number",
         "dimension": false
       }]
-=======
-    "path": "data/labor_force.csv",
-    "format": "csv",
-    "schema": {
-      "fields": [{
-          "name": "Town/County",
-          "type": "string",
-          "dimension": false
-        }, {
-          "name": "FIPS",
-          "type": "string",
-          "dimension": false
-        }, {
-          "name": "Year",
-          "type": "string",
-          "dimension": false
-        }, {
-          "name": "Measure",
-          "type": "string",
-          "dimension": true, 
-          "constraints": {
-            "enum": [
-              "Employment", 
-              "Labor Force",
-              "Unemployment", 
-              "Unemployment Rate"
-            ]
-          }            
-        }, {
-          "name": "Month",
-          "type": "string",
-          "dimension": true, 
-          "constraints": {
-            "enum": [
-              "January", 
-              "February", 
-              "March", 
-              "April", 
-              "May", 
-              "June", 
-              "July", 
-              "August", 
-              "September", 
-              "October", 
-              "November", 
-              "December", 
-              "Annual Average"
-            ]
-          }
-        }, {
-          "name": "Measure Type",
-          "type": "string",
-          "dimension": true, 
-          "constraints": {
-            "enum": [
-              "Number", 
-              "Percent"
-            ]
-          }           
-        }, {
-          "name": "Variable",
-          "type": "string",
-          "dimension": true, 
-          "constraints": {
-            "enum": [
-              "Labor Force"
-            ]
-          }           
-        }, {
-          "name": "Value",
-          "type": "number",
-          "dimension": false
-        }]
-      }
->>>>>>> 9392a4f4661929ef7de8e3d975f1036c1ebec828
     }
   }
   ],
@@ -262,11 +186,6 @@
     }
   },    
   "spot_checks": [
-<<<<<<< HEAD
-    
-=======
-  
->>>>>>> 9392a4f4661929ef7de8e3d975f1036c1ebec828
     {
       "type": "$lookup",
       "filter": {
@@ -331,17 +250,12 @@
         "value": 3208
       }
     }   
-<<<<<<< HEAD
-    ],
-=======
   ],
->>>>>>> 9392a4f4661929ef7de8e3d975f1036c1ebec828
   "dimension_groups": [
     {"Measure": ["Employment", 
                  "Labor Force",
                  "Unemployment", 
                  "Unemployment Rate"],
-<<<<<<< HEAD
       "Month": ["January", 
                 "February", 
                 "March", 
@@ -357,21 +271,4 @@
                 "Annual Average"],
       "Variable": ["Labor Force"]}
     ]
-=======
-     "Month": ["January", 
-               "February", 
-               "March", 
-               "April", 
-               "May", 
-               "June", 
-               "July", 
-               "August", 
-               "September", 
-               "October", 
-               "November", 
-               "December", 
-               "Annual Average"],
-     "Variable": ["Labor Force"]}
-  ]
->>>>>>> 9392a4f4661929ef7de8e3d975f1036c1ebec828
 }
