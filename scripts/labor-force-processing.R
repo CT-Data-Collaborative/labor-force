@@ -94,9 +94,15 @@ for (j in 1:length(county_files)) {
   }
   counties <- c("FAIRFIELD COUNTY", "HARTFORD COUNTY", "LITCHFIELD COUNTY", "MIDDLESEX COUNTY", 
                 "NEW HAVEN COUNTY", "NEW LONDON COUNTY", "TOLLAND COUNTY", "WINDHAM COUNTY", "STATEWIDE") 
+<<<<<<< HEAD
   
   current_file <- current_file[!blankFilter & current_file$`Town/County` %in% counties,]
   
+=======
+
+  current_file <- current_file[!blankFilter & current_file$`Town/County` %in% counties,]
+
+>>>>>>> 9392a4f4661929ef7de8e3d975f1036c1ebec828
   #assign year
   get_year <- unique(as.numeric(unlist(gsub("[^0-9]", "", unlist(county_files[j])), "")))
   current_file$Year <- get_year
@@ -109,6 +115,7 @@ all_counties$`Town/County` <- gsub("\\b([a-z])([a-z]+)", "\\U\\1\\E\\2", tolower
 
 #relabel statewide to CT
 all_counties <- within(all_counties, `Town/County`[`Town/County` == 'Statewide'] <- 'Connecticut')
+<<<<<<< HEAD
 
 #Add FIPS
 county_fips_dp_URL <- 'https://raw.githubusercontent.com/CT-Data-Collaborative/ct-county-list/master/datapackage.json'
@@ -149,6 +156,60 @@ all_geogs_long$Variable <- "Labor Force"
 #Reorder columns
 all_geogs_long <- all_geogs_long %>% 
   select(`Town/County`, `FIPS`, `Year`, `Measure`, `Month`, `Measure Type`, `Variable`, `Value`)
+=======
+
+#Add FIPS
+county_fips_dp_URL <- 'https://raw.githubusercontent.com/CT-Data-Collaborative/ct-county-list/master/datapackage.json'
+county_fips_dp <- datapkg_read(path = county_fips_dp_URL)
+county_fips <- (county_fips_dp$data[[1]])
+
+all_counties <- merge(all_counties, county_fips, by.x = "Town/County", by.y = "County", all=T)
+
+#Combine town and county/state data
+all_geogs <- rbind(all_towns, all_counties)
+
+#merge in measure type crosswalk
+fixed_meas <- read.csv(paste0(path, "/", "fixed_measures.csv"), stringsAsFactors=F, header=T)
+all_geogs_meas <- merge(all_geogs, fixed_meas, by = "Measure")
+all_geogs_meas$Measure <- all_geogs_meas$fixedMeasure
+all_geogs_meas$fixedMeasure <- NULL
+names(all_geogs_meas)[names(all_geogs_meas) == 'Measure.Type'] <- 'Measure Type'
+
+#Stack months
+#convert to long format
+cols_to_stack <- c("January", "February", "March", "April", "May", "June", 
+                   "July", "August", "September", "October", "November", "December", "Annual Average")
+
+long_row_count = nrow(all_geogs_meas) * length(cols_to_stack)
+
+all_geogs_long <- reshape(all_geogs_meas, 
+                               varying = cols_to_stack, 
+                               v.names = "Value", 
+                               timevar = "Month", 
+                               times = cols_to_stack, 
+                               new.row.names = 1:long_row_count,
+                               direction = "long"
+)
+
+all_geogs_long$id <- NULL
+all_geogs_long$Variable <- "Labor Force"
+
+#Reorder columns
+all_geogs_long <- all_geogs_long %>% 
+  select(`Town/County`, `FIPS`, `Year`, `Measure`, `Month`, `Measure Type`, `Variable`, `Value`)
+
+#Set sigfigs in Value column (trim trailing zeros)
+all_geogs_long$Value <- as.numeric(all_geogs_long$Value)
+
+# Write to File
+write.table(
+  all_geogs_long,
+  file.path(getwd(), "data", "labor_force.csv"),
+  sep = ",",
+  row.names = F
+)
+
+>>>>>>> 9392a4f4661929ef7de8e3d975f1036c1ebec828
 
 #Set sigfigs in Value column (trim trailing zeros)
 all_geogs_long$Value <- as.numeric(all_geogs_long$Value)
