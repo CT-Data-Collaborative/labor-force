@@ -94,8 +94,9 @@ for (j in 1:length(county_files)) {
   }
   counties <- c("FAIRFIELD COUNTY", "HARTFORD COUNTY", "LITCHFIELD COUNTY", "MIDDLESEX COUNTY", 
                 "NEW HAVEN COUNTY", "NEW LONDON COUNTY", "TOLLAND COUNTY", "WINDHAM COUNTY", "STATEWIDE") 
+  
   current_file <- current_file[!blankFilter & current_file$`Town/County` %in% counties,]
-
+  
   #assign year
   get_year <- unique(as.numeric(unlist(gsub("[^0-9]", "", unlist(county_files[j])), "")))
   current_file$Year <- get_year
