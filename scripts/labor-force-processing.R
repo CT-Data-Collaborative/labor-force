@@ -148,15 +148,20 @@ all_geogs_long$Variable <- "Labor Force"
 
 #Reorder columns
 all_geogs_long <- all_geogs_long %>% 
-  select(`Town/County`, `FIPS`, `Year`, `Measure`, `Month`, `Measure Type`, `Variable`, `Value`)
+  select(`Town/County`, `FIPS`, `Year`, `Measure`, `Month`, `Measure Type`, `Variable`, `Value`) %>% 
+  arrange(`Town/County`, Year)
 
 #Set sigfigs in Value column (trim trailing zeros)
 all_geogs_long$Value <- as.numeric(all_geogs_long$Value)
 
+all_geogs_long <- unique(all_geogs_long)
+
+test <- all_geogs_long[all_geogs_long$Year == "2015",]
+
 # Write to File
 write.table(
   all_geogs_long,
-  file.path(getwd(), "data", "labor_force_2008-2015.csv"),
+  file.path(getwd(), "data", "labor_force_2008-2016.csv"),
   sep = ",",
   row.names = F
 )
