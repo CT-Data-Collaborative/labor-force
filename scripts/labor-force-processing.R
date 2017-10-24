@@ -154,10 +154,6 @@ all_geogs_long <- all_geogs_long %>%
 #Set sigfigs in Value column (trim trailing zeros)
 all_geogs_long$Value <- as.numeric(all_geogs_long$Value)
 
-all_geogs_long <- unique(all_geogs_long)
-
-test <- all_geogs_long[all_geogs_long$Year == "2015",]
-
 # Write to File
 write.table(
   all_geogs_long,
