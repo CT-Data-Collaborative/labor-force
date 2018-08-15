@@ -21,7 +21,7 @@
   }],
   "contributor": [],
   "resources": [{
-    "path": "data/labor_force_2008-2016.csv",
+    "path": "data/labor_force_2008-2017.csv",
     "format": "csv",
     "schema": {
       "fields": [{
@@ -54,6 +54,7 @@
           "dimension": true, 
           "constraints": {
             "enum": [
+              "Annual Average",
               "January", 
               "February", 
               "March", 
@@ -65,8 +66,7 @@
               "September", 
               "October", 
               "November", 
-              "December", 
-              "Annual Average"
+              "December"
             ]
           }
         }, {
@@ -96,7 +96,7 @@
       }
     }
   ],
-  "last_modified": "10/24/2017",
+  "last_modified": "08/15/2018",
   "ckan_extras": {
     "full_description": {
       "ckan_name": "Full Description",
@@ -110,7 +110,7 @@
     },
     "technical_notes": {
       "ckan_name": "Technical Notes",
-      "value": "The 2015 LAUS redesign includes improved time-series models for the census divisions, states, select substate areas, and the balances of those states; an improved real-time benchmarking procedure to the national Current Population Survey (CPS) estimates; an improved smoothed seasonal adjustment procedure; and improved treatment of outliers. Non-modeled area estimation improvements include updated Dynamic Residency Ratios (DRR); more accurate estimates for all-other employment; more accurate estimation of agricultural employment; and improved estimation of non-covered agricultural unemployment. Handbook estimation is now done at the city/town level instead of at the Labor Market Area (LMA) level in Connecticut, which better reflects local conditions. The redesign also introduces estimation inputs from the American Community Survey (ACS) to replace inputs that were previously obtained from the decennial census long-form survey. Years 2008-2009 have been benchmarked to 2010. Years 2010-2011 have been benchmarked to 2015. Years 2012-2015 have been benchmarked to 2016.",
+      "value": "The 2015 LAUS redesign includes improved time-series models for the census divisions, states, select substate areas, and the balances of those states; an improved real-time benchmarking procedure to the national Current Population Survey (CPS) estimates; an improved smoothed seasonal adjustment procedure; and improved treatment of outliers. Non-modeled area estimation improvements include updated Dynamic Residency Ratios (DRR); more accurate estimates for all-other employment; more accurate estimation of agricultural employment; and improved estimation of non-covered agricultural unemployment. Handbook estimation is now done at the city/town level instead of at the Labor Market Area (LMA) level in Connecticut, which better reflects local conditions. The redesign also introduces estimation inputs from the American Community Survey (ACS) to replace inputs that were previously obtained from the decennial census long-form survey. Years 2008-2009 have been benchmarked to 2010. Years 2010-2017 have been benchmarked to 2017.",
       "type": "string"
     },
     "socrata": {
@@ -156,12 +156,12 @@
     },
     "years_in_catalog": {
       "ckan_name": "Years in Catalog",
-      "value": ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"],
+      "value": ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"],
       "type": "array"
     },
     "latest_year": {
       "ckan_name": "Latest Year Available",
-      "value": "2016",
+      "value": "2017",
       "type": "string"
     },
     "disabled_views": {
@@ -186,7 +186,7 @@
       "ckan_name": "Default",
       "value": {
         "Town/County": "Connecticut",
-        "Year": ["2012", "2013", "2014", "2015", "2016"],
+        "Year": ["2013", "2014", "2015", "2016", "2017"],
         "Month": ["Annual Average"],
         "Variable": ["Labor Force"], 
         "Measure": ["Employment", "Labor Force", "Unemployment Rate", "Unemployment"]  
@@ -224,7 +224,7 @@
       "expected": {
         "type": "$match",
         "number type": "float",
-        "value": 5.0
+        "value": 4.9
       }
     }, 
     {
@@ -240,7 +240,7 @@
       "expected": {
         "type": "$match",
         "number type": "int",
-        "value": 4726
+        "value": 4816
       }
     },    
     {
@@ -256,7 +256,7 @@
       "expected": {
         "type": "$match",
         "number type": "int",
-        "value": 47826
+        "value": 48029
       }
     }, 
     {
@@ -272,9 +272,25 @@
       "expected": {
         "type": "$match",
         "number type": "int",
-        "value": 29397
+        "value": 29426
       }
-    }    
+    }, 
+    {
+      "type": "$lookup",
+      "filter": {
+        "Town/County": "Litchfield County",
+        "Year": "2017",
+        "Month": "November",
+        "Variable": "Labor Force",
+        "Measure": "Unemployment Rate",
+        "Measure Type": "Percent"
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "float",
+        "value": 3.6
+      }
+    }     
   ],
   "dimension_groups": [
       {

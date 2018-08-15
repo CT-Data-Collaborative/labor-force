@@ -17,17 +17,38 @@ path <- (paste0(getwd(), "/", data_location))
 # returns string w/o leading or trailing whitespace
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
+#read in entire xls file (all sheets)
+read_excel_allsheets <- function(filename) {
+  sheets <- readxl::excel_sheets(filename)
+  x <- lapply(sheets, function(X) readxl::read_excel(filename, sheet = X))
+  names(x) <- sheets
+  x
+}
+
 ###Create subsets
 
 ##Town Data######################################################################################################################
 
 #grabs town xls files
 town_path <- file.path(path, "town")
-town_files <- dir(town_path, pattern = "town")
+town_files <- dir(town_path, pattern = "xls")
 
+for (i in 1:length(town_files)) {
+  mysheets <- read_excel_allsheets(paste0(town_path, "/", town_files[i]))
+  town_sheet_index <- grep("Towns", names(mysheets))
+  town_sheet <- mysheets[[town_sheet_index]]
+  get_year <- substr((unlist(gsub("[^0-9]", "", unlist(town_files[i])), "")), 1, 4)
+  assign(paste0(get_year, "-towns"), town_sheet)
+}
+
+#Concatenate all DFs
+dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
+all_town_dfs <- grep("towns", dfs, value=T)
+
+#Combine all geog DFs into one data frame
 all_towns <- data.frame(stringsAsFactors = F)
-for (j in 1:length(town_files)) {
-  current_file <- (read_excel(paste0(town_path, "/", town_files[j]), sheet=1, skip=4))
+for (j in 1:length(all_town_dfs)) {
+  current_file <- get(all_town_dfs[j])
   colnames(current_file) <- c("Town/County", "Measure", "January", "February", "March", "April", "May", "June", 
                               "July", "August", "September", "October", "November", "December", "Annual Average")
   #remove blank rows
@@ -44,13 +65,16 @@ for (j in 1:length(town_files)) {
     }
   }
   #assign year
-  get_year <- unique(as.numeric(unlist(gsub("[^0-9]", "", unlist(town_files[j])), "")))
+  get_year <- substr((unlist(gsub("[^0-9]", "", unlist(town_files[j])), "")), 1, 4)
   current_file$Year <- get_year
   #trim white space from `Town/County` column
   current_file$`Town/County` <- trim(current_file$`Town/County`)
   #bind together
   all_towns <- rbind(all_towns, current_file) 
 }
+
+#Fix Union
+all_towns$`Town/County` <- gsub("\\*", "", all_towns$`Town/County`)
 
 #Add FIPS
 town_fips_dp_URL <- 'https://raw.githubusercontent.com/CT-Data-Collaborative/ct-town-list/master/datapackage.json'
@@ -65,11 +89,24 @@ all_towns <- all_towns[ grep("Connecticut", all_towns$`Town/County`, invert = TR
 
 #grabs county xls files
 county_path <- file.path(path, "county")
-county_files <- dir(county_path, pattern = "cty")
+county_files <- dir(county_path, pattern = "xls")
+
+for (i in 1:length(county_files)) {
+  mysheets <- read_excel_allsheets(paste0(county_path, "/", county_files[i]))
+  county_sheets <- c("County", "COUNTIES")
+  county_sheet_index <- unique (grep(paste(county_sheets, collapse="|"), names(mysheets)))  
+  county_sheet <- mysheets[[county_sheet_index]]
+  get_year <- substr((unlist(gsub("[^0-9]", "", unlist(county_files[i])), "")), 1, 4)
+  assign(paste0(get_year, "-counties"), county_sheet)
+}
+
+#Concatenate all DFs
+dfs <- ls()[sapply(mget(ls(), .GlobalEnv), is.data.frame)]
+all_county_dfs <- grep("counties", dfs, value=T)
 
 all_counties <- data.frame(stringsAsFactors = F)
-for (j in 1:length(county_files)) {
-  current_file <- (read_excel(paste0(county_path, "/", county_files[j]), sheet=1, skip=1))
+for (j in 1:length(all_county_dfs)) {
+  current_file <- get(all_county_dfs[j])
   colnames(current_file) <- c("Town/County", "Measure", "January", "February", "March", "April", "May", "June", 
                               "July", "August", "September", "October", "November", "December", "Annual Average")
   #delete blank rows
@@ -98,7 +135,7 @@ for (j in 1:length(county_files)) {
   current_file <- current_file[!blankFilter & current_file$`Town/County` %in% counties,]
   
   #assign year
-  get_year <- unique(as.numeric(unlist(gsub("[^0-9]", "", unlist(county_files[j])), "")))
+  get_year <- substr((unlist(gsub("[^0-9]", "", unlist(county_files[j])), "")), 1, 4)
   current_file$Year <- get_year
   #bind together
   all_counties <- rbind(all_counties, current_file) 
@@ -127,37 +164,28 @@ all_geogs_meas$Measure <- all_geogs_meas$fixedMeasure
 all_geogs_meas$fixedMeasure <- NULL
 names(all_geogs_meas)[names(all_geogs_meas) == 'Measure.Type'] <- 'Measure Type'
 
-#Stack months
-#convert to long format
-cols_to_stack <- c("Annual Average", "January", "February", "March", "April", "May", "June", 
-                   "July", "August", "September", "October", "November", "December")
+#convert wide to long format
+all_geogs_long <- gather(all_geogs_meas, Month, Value, 3:15, factor_key=F)
 
-long_row_count = nrow(all_geogs_meas) * length(cols_to_stack)
+#Setting "Annual Average" as the first level, so the Month column doesn't get converted to a date in CKAN datastore
+all_geogs_long$Month <- factor(all_geogs_long$Month, 
+                               levels = c("Annual Average", "January", "February", "March", "April", "May", "June", 
+                                          "July", "August", "September", "October", "November", "December"))
 
-all_geogs_long <- reshape(all_geogs_meas, 
-                          varying = cols_to_stack, 
-                          v.names = "Value", 
-                          timevar = "Month", 
-                          times = cols_to_stack, 
-                          new.row.names = 1:long_row_count,
-                          direction = "long"
-)
-
-all_geogs_long$id <- NULL
 all_geogs_long$Variable <- "Labor Force"
 
 #Reorder columns
 all_geogs_long <- all_geogs_long %>% 
-  select(`Town/County`, `FIPS`, `Year`, `Measure`, `Month`, `Measure Type`, `Variable`, `Value`) %>% 
-  arrange(`Town/County`, Year)
+  select(`Town/County`, FIPS, Year, Measure, Month, `Measure Type`, Variable, Value) %>% 
+  arrange(`Town/County`, Year, Month)
 
 #Set sigfigs in Value column (trim trailing zeros)
-all_geogs_long$Value <- as.numeric(all_geogs_long$Value)
+all_geogs_long$Value <- round(as.numeric(all_geogs_long$Value), 1)
 
 # Write to File
 write.table(
   all_geogs_long,
-  file.path(getwd(), "data", "labor_force_2008-2016.csv"),
+  file.path(getwd(), "data", "labor_force_2008-2017.csv"),
   sep = ",",
   row.names = F
 )

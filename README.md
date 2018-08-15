@@ -1,7 +1,5 @@
 Labor-Force
 
-[![Build Status](https://travis-ci.org/CT-Data-Collaborative/labor-force.svg?branch=master)](https://travis-ci.org/CT-Data-Collaborative/labor-force)
-
 Labor Force reports the size of the civilian noninstitutionalized labor force, by category.
 
 Data Source: <http://www1.ctdol.state.ct.us/lmi/laus/laustown.asp>
