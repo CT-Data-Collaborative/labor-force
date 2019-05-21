@@ -1,6 +1,7 @@
 library(dplyr)
 library(datapkg)
 library(readxl)
+library(tidyr)
 
 ##################################################################
 #
@@ -182,10 +183,14 @@ all_geogs_long <- all_geogs_long %>%
 #Set sigfigs in Value column (trim trailing zeros)
 all_geogs_long$Value <- round(as.numeric(all_geogs_long$Value), 1)
 
+# For some reason Counties and Connecticut are doubule-written in the final frame,
+# once with the proper year and once with year=NA. So filter out NAs. - added by Ilya on May 21, 2019
+all_geogs_long <- drop_na(all_geogs_long, 'Year')
+
 # Write to File
 write.table(
   all_geogs_long,
-  file.path(getwd(), "data", "labor_force_2008-2017.csv"),
+  file.path(getwd(), "data", "labor_force_2008-2018.csv"),
   sep = ",",
   row.names = F
 )

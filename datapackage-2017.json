@@ -1,0 +1,335 @@
+{
+  "name": "labor-force",
+  "datapackage_version": "1.0-beta.18",
+  "title": "Labor Force",
+  "description": "Labor Force reports the size of the civilian noninstitutionalized labor force, by category.",
+  "version": "1.0",
+  "licenses": [{
+    "url": "http://opendatacommons.org/licenses/pddl/",
+    "name": "Open Data Commons Public Domain",
+    "version": "1.0",
+    "id": "odc-pddl"
+  }],
+  "sources": [{
+    "name": "ctdol",
+    "web": ""
+  }],
+  "author":[{
+    "name": "Jenna Daly",
+    "email": "jdaly@ctdata.org",
+    "web": "http://ctdata.org"
+  }],
+  "contributor": [],
+  "resources": [{
+    "path": "data/labor_force_2008-2017.csv",
+    "format": "csv",
+    "schema": {
+      "fields": [{
+          "name": "Town/County",
+          "type": "string",
+          "dimension": false
+        }, {
+          "name": "FIPS",
+          "type": "string",  
+          "dimension": false
+        }, {
+          "name": "Year",
+          "type": "string",
+          "dimension": false
+        }, {
+          "name": "Measure",
+          "type": "string",
+          "dimension": true, 
+          "constraints": {
+            "enum": [
+              "Employment", 
+              "Labor Force",
+              "Unemployment", 
+              "Unemployment Rate"
+            ]
+          }            
+        }, {
+          "name": "Month",
+          "type": "string",
+          "dimension": true, 
+          "constraints": {
+            "enum": [
+              "Annual Average",
+              "January", 
+              "February", 
+              "March", 
+              "April", 
+              "May", 
+              "June", 
+              "July", 
+              "August", 
+              "September", 
+              "October", 
+              "November", 
+              "December"
+            ]
+          }
+        }, {
+          "name": "Measure Type",
+          "type": "string",
+          "dimension": true, 
+          "constraints": {
+            "enum": [
+              "Number", 
+              "Percent"
+            ]
+          }           
+        }, {
+          "name": "Variable",
+          "type": "string",
+          "dimension": true, 
+          "constraints": {
+            "enum": [
+              "Labor Force"
+            ]
+          }           
+        }, {
+          "name": "Value",
+          "type": "number",
+          "dimension": false
+        }]
+      }
+    }
+  ],
+  "last_modified": "08/15/2018",
+  "ckan_extras": {
+    "full_description": {
+      "ckan_name": "Full Description",
+      "value": "Labor Force reports the number of civilian noninstitutionalized labor force participants, which includes employed and unemployed persons; and the unemployment rate (per 100 persons). The civilian noninstitutionalized labor force is all persons aged 16 and over who are not on active duty in the Armed Forces and who are not inmates of institutions, including prisons, mental facilities, and nursing homes who are either employed or unemployed. Employed persons are labor force participants who, during the week when data was collected, do any work as paid employees (at least one hour), work as self-employed, or are temporarily absent from work during the time of data collection period but otherwise employed. Unemployed persons are labor force participants who, during the week when data was collected, do not have jobs, who have actively looked for work in the past 4 weeks, and who are currently available to work. The unemployment rate is the percentage of the labor force that is unemployed. The Connecticut Department of Labor reports monthly and annual averages. CTdata.org carries the monthly data and the annual averages. In 2015, LAUS redesigned its methodology (see Technical Notes for more detail). This new methodology was carried back to 2010, hence, many areas can be expected to see breaks in the series between 2009 and 2010.",
+      "type": "string"
+    },
+    "suppression": {
+      "ckan_name": "Suppression",
+      "value": "",
+      "type": "string"
+    },
+    "technical_notes": {
+      "ckan_name": "Technical Notes",
+      "value": "The 2015 LAUS redesign includes improved time-series models for the census divisions, states, select substate areas, and the balances of those states; an improved real-time benchmarking procedure to the national Current Population Survey (CPS) estimates; an improved smoothed seasonal adjustment procedure; and improved treatment of outliers. Non-modeled area estimation improvements include updated Dynamic Residency Ratios (DRR); more accurate estimates for all-other employment; more accurate estimation of agricultural employment; and improved estimation of non-covered agricultural unemployment. Handbook estimation is now done at the city/town level instead of at the Labor Market Area (LMA) level in Connecticut, which better reflects local conditions. The redesign also introduces estimation inputs from the American Community Survey (ACS) to replace inputs that were previously obtained from the decennial census long-form survey. Years 2008-2009 have been benchmarked to 2010. Years 2010-2017 have been benchmarked to 2017.",
+      "type": "string"
+    },
+    "socrata": {
+      "ckan_name": "Socrata",
+      "value": "False",
+      "type": "string"
+    },
+    "socrata_url": {
+      "ckan_name": "Socrata Dataset URL",
+      "value": "",
+      "type": "string"
+    },
+    "domain": {
+      "ckan_name": "Domain",
+      "value": "Economy",
+      "type": "string"
+    },
+    "subdomain": {
+      "ckan_name": "Subdomain",
+      "value": "Employment",
+      "type": "string"
+    },
+    "numerator": {
+      "ckan_name": "Numerator",
+      "value": "Number of unemployed persons.",
+      "type": "string"
+    },    
+    "denominator": {
+      "ckan_name": "Denominator",
+      "value": "Labor force, Number.",
+      "type": "string"
+    },    
+    "geography": {
+      "ckan_name": "Geography",
+      "value": "Town/County",
+      "type": "string",
+      "constraints": {"enum": ["Town", "County", "Town/County", "District", "Other"]}
+    },
+    "frequency": {
+      "ckan_name": "Frequency",
+      "value": "Monthly",
+      "type": "string"
+    },
+    "years_in_catalog": {
+      "ckan_name": "Years in Catalog",
+      "value": ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"],
+      "type": "array"
+    },
+    "latest_year": {
+      "ckan_name": "Latest Year Available",
+      "value": "2017",
+      "type": "string"
+    },
+    "disabled_views": {
+      "ckan_name": "Disabled Views",
+      "value": [],
+      "type": "array",
+      "constraints": {"enum": ["map", "table", "bar", "line"]}
+    },
+    "units": {
+      "ckan_name": "Units",
+      "value": {
+        "Number": "",
+        "Percent": "%"
+      }
+    },
+    "expected_number_of_geographies": {
+      "ckan_name": "Expected Number of Unique Geographies",
+      "value": 178,
+      "type": "string"
+    },   
+    "default": {
+      "ckan_name": "Default",
+      "value": {
+        "Town/County": "Connecticut",
+        "Year": ["2013", "2014", "2015", "2016", "2017"],
+        "Month": ["Annual Average"],
+        "Variable": ["Labor Force"], 
+        "Measure": ["Employment", "Labor Force", "Unemployment Rate", "Unemployment"]  
+      },
+      "type": "object"
+    }
+  },    
+  "spot_checks": [
+    {
+      "type": "$lookup",
+      "filter": {
+        "Town/County": "Beacon Falls",
+        "Year": "2011",
+        "Month": "January",
+        "Variable": "Labor Force",
+        "Measure": "Labor Force",
+        "Measure Type": "Number"
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "int",
+        "value": 3417
+      }
+    }, 
+    {
+      "type": "$lookup",
+      "filter": {
+        "Town/County": "Salisbury",
+        "Year": "2012",
+        "Month": "September",
+        "Variable": "Labor Force",
+        "Measure": "Unemployment Rate",
+        "Measure Type": "Percent"
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "float",
+        "value": 4.9
+      }
+    }, 
+    {
+      "type": "$lookup",
+      "filter": {
+        "Town/County": "Windham County",
+        "Year": "2013",
+        "Month": "November",
+        "Variable": "Labor Force",
+        "Measure": "Unemployment",
+        "Measure Type": "Number"
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "int",
+        "value": 4816
+      }
+    },    
+    {
+      "type": "$lookup",
+      "filter": {
+        "Town/County": "Hartford",
+        "Year": "2014",
+        "Month": "Annual Average",
+        "Variable": "Labor Force",
+        "Measure": "Employment",
+        "Measure Type": "Number"
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "int",
+        "value": 48029
+      }
+    }, 
+    {
+      "type": "$lookup",
+      "filter": {
+        "Town/County": "Greenwich",
+        "Year": "2015",
+        "Month": "July",
+        "Variable": "Labor Force",
+        "Measure": "Labor Force",
+        "Measure Type": "Number"
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "int",
+        "value": 29426
+      }
+    }, 
+    {
+      "type": "$lookup",
+      "filter": {
+        "Town/County": "Litchfield County",
+        "Year": "2017",
+        "Month": "November",
+        "Variable": "Labor Force",
+        "Measure": "Unemployment Rate",
+        "Measure Type": "Percent"
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "float",
+        "value": 3.6
+      }
+    }     
+  ],
+  "dimension_groups": [
+      {
+          "Variable": ["Labor Force"],
+          "Measure": ["Employment", 
+                      "Labor Force",
+                      "Unemployment"],
+          "Month": ["January", 
+                    "February", 
+                    "March", 
+                    "April", 
+                    "May", 
+                    "June", 
+                    "July", 
+                    "August", 
+                    "September", 
+                    "October", 
+                    "November", 
+                    "December", 
+                    "Annual Average"], 
+          "Measure Type": ["Number"]
+      },
+      {
+          "Variable": ["Labor Force"],
+          "Measure": ["Unemployment Rate"],
+          "Month": ["January", 
+                    "February", 
+                    "March", 
+                    "April", 
+                    "May", 
+                    "June", 
+                    "July", 
+                    "August", 
+                    "September", 
+                    "October", 
+                    "November", 
+                    "December", 
+                    "Annual Average"], 
+          "Measure Type": ["Percent"]
+      }
+    ]
+}
