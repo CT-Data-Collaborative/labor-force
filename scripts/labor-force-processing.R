@@ -95,7 +95,7 @@ county_files <- dir(county_path, pattern = "xls")
 for (i in 1:length(county_files)) {
   mysheets <- read_excel_allsheets(paste0(county_path, "/", county_files[i]))
   county_sheets <- c("County", "COUNTIES")
-  county_sheet_index <- unique (grep(paste(county_sheets, collapse="|"), names(mysheets)))  
+  county_sheet_index <- unique (grep(paste(county_sheets, collapse="|"), names(mysheets))) 
   county_sheet <- mysheets[[county_sheet_index]]
   get_year <- substr((unlist(gsub("[^0-9]", "", unlist(county_files[i])), "")), 1, 4)
   assign(paste0(get_year, "-counties"), county_sheet)
@@ -190,7 +190,7 @@ all_geogs_long <- drop_na(all_geogs_long, 'Year')
 # Write to File
 write.table(
   all_geogs_long,
-  file.path(getwd(), "data", "labor_force_2008-2018.csv"),
+  file.path(getwd(), "data", "labor_force_2005-2020.csv"),
   sep = ",",
   row.names = F
 )
